@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TEAM AKIRU — Telegram Feed</title>
+    <title>TEAM AKIRU</title>
 
     <style>
         /* ─────────── Global Style ─────────── */
@@ -16,12 +16,13 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            align-items: center;
         }
 
         /* ─────────── Container ─────────── */
         .wrapper {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -37,8 +38,8 @@
         }
 
         .header h1 {
-            font-size: 26px;
-            margin: 0;
+            font-size: 24px;
+            margin: 0 0 8px 0;
             letter-spacing: 1px;
             background: linear-gradient(90deg, #0088cc, #00cc88);
             -webkit-background-clip: text;
@@ -47,62 +48,121 @@
         }
 
         .header p {
-            margin: 10px 0 0;
+            margin: 0;
             opacity: 0.8;
             font-size: 14px;
-        }
-
-        .feed-box {
-            background: #121212;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            border: 1px solid #222;
-            overflow: hidden;
-        }
-
-        .telegram-feed {
-            width: 100%;
-            height: 600px;
-            border: none;
-            display: block;
-            background: transparent;
-        }
-
-        .feed-links {
-            padding: 15px;
-            background: #1a1a1a;
-            border-top: 1px solid #222;
-            text-align: center;
-        }
-
-        .feed-link {
-            color: #0088cc;
-            text-decoration: none;
-            font-size: 14px;
-            margin: 0 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: opacity 0.3s;
-        }
-
-        .feed-link:hover {
-            opacity: 0.8;
-        }
-
-        .feed-link svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
         }
 
         .post-count {
             display: inline-block;
             background: rgba(0, 136, 204, 0.2);
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            margin-left: 5px;
+            margin-top: 10px;
+        }
+
+        /* Latest Post Container */
+        .latest-post-container {
+            background: #121212;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid #222;
+            overflow: hidden;
+            margin-bottom: 20px;
+            min-height: 300px;
+        }
+
+        .post-header {
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-title {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .post-title svg {
+            width: 20px;
+            height: 20px;
+            fill: #0088cc;
+        }
+
+        .post-date {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .post-content {
+            padding: 20px;
+        }
+
+        .loading-post {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .refresh-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            color: #0088cc;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(0, 136, 204, 0.2);
+            border-color: #0088cc;
+        }
+
+        .refresh-btn svg {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin-right: 6px;
+            fill: currentColor;
+        }
+
+        /* View All Button */
+        .view-all-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            margin-top: 10px;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .view-all-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #444;
         }
 
         .footer {
@@ -113,18 +173,10 @@
             padding: 15px;
         }
 
-        /* Loading state */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
         /* Mobile tweak */
         @media (max-width: 480px) {
             .wrapper {
-                padding: 10px;
+                padding: 15px;
             }
             
             .header {
@@ -136,20 +188,12 @@
                 font-size: 20px;
             }
             
-            .telegram-feed {
-                height: 500px;
+            .post-header {
+                padding: 12px 15px;
             }
             
-            .feed-link {
-                display: block;
-                margin: 8px 0;
-            }
-        }
-
-        /* Tablet */
-        @media (min-width: 768px) {
-            .telegram-feed {
-                height: 700px;
+            .post-content {
+                padding: 15px;
             }
         }
     </style>
@@ -159,90 +203,136 @@
     <div class="wrapper">
         <!-- Header Block -->
         <div class="header">
-            <h1>TEAM AKIRU — Live Telegram Feed</h1>
-            <p>Real-time updates and announcements</p>
-            <span class="post-count">1043 posts</span>
+            <h1>TEAM AKIRU — Latest Update</h1>
+            <p>Showing the most recent post from Telegram</p>
+            <span class="post-count">Total: 1043 posts</span>
         </div>
 
-        <!-- Telegram Feed Block -->
-        <div class="feed-box">
-            <!-- Loading indicator -->
-            <div class="loading" id="loading">
-                Loading TEAM AKIRU Telegram feed...
-            </div>
-            
-            <!-- Telegram iFrame Feed -->
-            <iframe 
-                src="https://t.me/s/TEAMAKIRU?embed=1" 
-                class="telegram-feed"
-                scrolling="yes"
-                frameborder="0"
-                allowtransparency="true"
-                allow="autoplay; encrypted-media"
-                onload="document.getElementById('loading').style.display='none';"
-                title="TEAM AKIRU Telegram Channel">
-            </iframe>
-            
-            <!-- Quick Links -->
-            <div class="feed-links">
-                <a href="https://t.me/TEAMAKIRU" class="feed-link" target="_blank">
+        <!-- Latest Post Container -->
+        <div class="latest-post-container">
+            <div class="post-header">
+                <div class="post-title">
                     <svg viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.06-.2-.08-.06-.19-.04-.27-.02-.12.02-1.97 1.25-5.56 3.67-.53.37-1.01.56-1.44.55-.48-.01-1.4-.27-2.08-.5-.84-.28-1.51-.43-1.45-.9.03-.24.33-.49.91-.75 3.57-1.55 5.96-2.58 7.14-3.11 3.38-1.57 4.08-1.85 4.54-1.96.1-.02.32-.04.46.03.12.06.19.15.22.24.03.1.05.31.02.48z"/>
                     </svg>
-                    Open in Telegram App
-                </a>
-                
-                <a href="https://t.me/s/TEAMAKIRU" class="feed-link" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                    </svg>
-                    View Web Version
-                </a>
+                    Latest Post
+                </div>
+                <div class="post-date" id="postDate">Just now</div>
+            </div>
+
+            <div class="loading-post" id="loadingPost">
+                Loading latest update from TEAM AKIRU...
+            </div>
+
+            <!-- Telegram Widget for Latest Post -->
+            <div id="telegramPost" style="display: none;">
+                <script async src="https://telegram.org/js/telegram-widget.js?22"
+                    data-telegram-post="TEAMAKIRU/1043"  <!-- Change 1043 to latest post number -->
+                    data-width="100%"
+                    data-dark="1"
+                    data-userpic="false">
+                </script>
             </div>
         </div>
+
+        <!-- Refresh Button -->
+        <button class="refresh-btn" id="refreshBtn">
+            <svg viewBox="0 0 24 24">
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+            Refresh Latest Post
+        </button>
+
+        <!-- View All Posts Link -->
+        <a href="https://t.me/s/TEAMAKIRU?embed=1" target="_blank" class="view-all-btn">
+            View All 1043 Posts →
+        </a>
 
         <!-- Footer -->
         <div class="footer">
             © TEAM AKIRU — Telegram Updates<br>
-            <small>Embedded via Telegram Web</small>
+            <small>Auto-updates every 5 minutes</small>
         </div>
     </div>
 
     <script>
-        // Auto-adjust iframe height on mobile
-        function adjustIframeHeight() {
-            const iframe = document.querySelector('.telegram-feed');
-            const isMobile = window.innerWidth <= 480;
+        // Current latest post number (update this manually when you post new content)
+        let latestPostNumber = 1043;
+        
+        // Function to load the latest post
+        function loadLatestPost() {
+            const loadingEl = document.getElementById('loadingPost');
+            const postContainer = document.getElementById('telegramPost');
+            const postDateEl = document.getElementById('postDate');
             
-            if (isMobile) {
-                iframe.style.height = '500px';
-            } else if (window.innerWidth >= 768) {
-                iframe.style.height = '700px';
-            } else {
-                iframe.style.height = '600px';
-            }
+            // Show loading
+            loadingEl.style.display = 'block';
+            postContainer.style.display = 'none';
+            postDateEl.textContent = 'Loading...';
+            
+            // Create new script element for the latest post
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://telegram.org/js/telegram-widget.js?22';
+            script.setAttribute('data-telegram-post', `TEAMAKIRU/${latestPostNumber}`);
+            script.setAttribute('data-width', '100%');
+            script.setAttribute('data-dark', '1');
+            script.setAttribute('data-userpic', 'false');
+            
+            // Clear previous widget
+            postContainer.innerHTML = '';
+            postContainer.appendChild(script);
+            
+            // Hide loading and show post after delay
+            setTimeout(() => {
+                loadingEl.style.display = 'none';
+                postContainer.style.display = 'block';
+                
+                // Update timestamp
+                const now = new Date();
+                postDateEl.textContent = now.toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }, 1500);
         }
         
-        // Initial adjustment
-        window.addEventListener('load', adjustIframeHeight);
+        // Initial load
+        loadLatestPost();
         
-        // Adjust on resize
-        window.addEventListener('resize', adjustIframeHeight);
+        // Refresh button click
+        document.getElementById('refreshBtn').addEventListener('click', loadLatestPost);
         
-        // Reload iframe if it fails to load
-        setTimeout(() => {
-            const loading = document.getElementById('loading');
-            const iframe = document.querySelector('.telegram-feed');
+        // Auto-refresh every 5 minutes (300000 ms)
+        setInterval(() => {
+            document.getElementById('postDate').textContent = 'Refreshing...';
+            setTimeout(loadLatestPost, 1000);
+        }, 300000);
+        
+        // Update post number if you know it's changed
+        // You can manually update this variable when you post new content
+        // Or implement an API call to fetch the latest post number
+        
+        // Optional: Check for new posts (simplified version)
+        function checkForNewPost() {
+            // In a real implementation, you would:
+            // 1. Fetch the channel's RSS feed: https://rsshub.app/telegram/channel/TEAMAKIRU
+            // 2. Parse the latest post number
+            // 3. Update latestPostNumber if new post found
+            // 4. Reload the widget
             
-            if (loading.style.display !== 'none') {
-                loading.innerHTML = 'Having trouble loading? <a href="https://t.me/TEAMAKIRU" target="_blank" style="color:#0088cc;">Click here to open directly</a>';
-                
-                // Try reloading once
-                setTimeout(() => {
-                    iframe.src = iframe.src;
-                }, 3000);
+            console.log('Checking for new posts... (This would require backend implementation)');
+        }
+        
+        // Check for new posts every 10 minutes
+        setInterval(checkForNewPost, 600000);
+        
+        // Add keyboard shortcut (R to refresh)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                loadLatestPost();
             }
-        }, 8000);
+        });
     </script>
 
 </body>
