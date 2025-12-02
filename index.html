@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TEAM AKIRU</title>
 
+    <!-- Load Telegram's official emoji font -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@telegram-apps/emoji@1.0.0/fonts/telegram-emoji.css">
+    
     <style>
         /* ─────────── Global Style ─────────── */
         body {
@@ -102,7 +105,16 @@
         }
 
         .post-content {
-            padding: 20px;
+            padding: 0;
+            height: 500px;
+        }
+
+        /* Telegram iframe styling */
+        .telegram-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            background: transparent;
         }
 
         .loading-post {
@@ -192,8 +204,8 @@
                 padding: 12px 15px;
             }
             
-            .post-content {
-                padding: 15px;
+            .telegram-iframe {
+                height: 400px;
             }
         }
     </style>
@@ -203,7 +215,7 @@
     <div class="wrapper">
         <!-- Header Block -->
         <div class="header">
-            <h1>TEAM AKIRU — Latest Update</h1>
+            <h1>TEAM AKIRU</h1>
             <p>Showing the most recent post from Telegram</p>
             <span class="post-count">Total: 1043 posts</span>
         </div>
@@ -220,18 +232,22 @@
                 <div class="post-date" id="postDate">Just now</div>
             </div>
 
-            <div class="loading-post" id="loadingPost">
-                Loading latest update from TEAM AKIRU...
-            </div>
-
-            <!-- Telegram Widget for Latest Post -->
-            <div id="telegramPost" style="display: none;">
-                <script async src="https://telegram.org/js/telegram-widget.js?22"
-                    data-telegram-post="TEAMAKIRU/1043"  <!-- Change 1043 to latest post number -->
-                    data-width="100%"
-                    data-dark="1"
-                    data-userpic="false">
-                </script>
+            <div class="post-content">
+                <!-- Loading -->
+                <div class="loading-post" id="loadingPost">
+                    Loading latest update from TEAM AKIRU...
+                </div>
+                
+                <!-- Telegram iframe - Better for emojis -->
+                <iframe 
+                    id="telegramIframe"
+                    class="telegram-iframe"
+                    src=""
+                    frameborder="0"
+                    scrolling="no"
+                    allowtransparency="true"
+                    onload="document.getElementById('loadingPost').style.display='none';">
+                </iframe>
             </div>
         </div>
 
@@ -251,42 +267,35 @@
         <!-- Footer -->
         <div class="footer">
             © TEAM AKIRU — Telegram Updates<br>
-            <small>Auto-updates every 5 minutes</small>
+            <small>Premium emojis supported via iframe</small>
         </div>
     </div>
 
     <script>
-        // Current latest post number (update this manually when you post new content)
+        // Current latest post number
         let latestPostNumber = 1043;
         
-        // Function to load the latest post
+        // Function to load the latest post in iframe
         function loadLatestPost() {
             const loadingEl = document.getElementById('loadingPost');
-            const postContainer = document.getElementById('telegramPost');
+            const iframe = document.getElementById('telegramIframe');
             const postDateEl = document.getElementById('postDate');
             
             // Show loading
             loadingEl.style.display = 'block';
-            postContainer.style.display = 'none';
+            iframe.style.display = 'none';
             postDateEl.textContent = 'Loading...';
             
-            // Create new script element for the latest post
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://telegram.org/js/telegram-widget.js?22';
-            script.setAttribute('data-telegram-post', `TEAMAKIRU/${latestPostNumber}`);
-            script.setAttribute('data-width', '100%');
-            script.setAttribute('data-dark', '1');
-            script.setAttribute('data-userpic', 'false');
+            // Construct iframe URL with parameters for better display
+            const iframeUrl = `https://t.me/TEAMAKIRU/${latestPostNumber}?embed=1&single=1&mode=tme`;
             
-            // Clear previous widget
-            postContainer.innerHTML = '';
-            postContainer.appendChild(script);
+            // Set iframe source
+            iframe.src = iframeUrl;
             
-            // Hide loading and show post after delay
+            // Hide loading and show iframe after delay
             setTimeout(() => {
                 loadingEl.style.display = 'none';
-                postContainer.style.display = 'block';
+                iframe.style.display = 'block';
                 
                 // Update timestamp
                 const now = new Date();
@@ -303,29 +312,11 @@
         // Refresh button click
         document.getElementById('refreshBtn').addEventListener('click', loadLatestPost);
         
-        // Auto-refresh every 5 minutes (300000 ms)
+        // Auto-refresh every 5 minutes
         setInterval(() => {
             document.getElementById('postDate').textContent = 'Refreshing...';
             setTimeout(loadLatestPost, 1000);
         }, 300000);
-        
-        // Update post number if you know it's changed
-        // You can manually update this variable when you post new content
-        // Or implement an API call to fetch the latest post number
-        
-        // Optional: Check for new posts (simplified version)
-        function checkForNewPost() {
-            // In a real implementation, you would:
-            // 1. Fetch the channel's RSS feed: https://rsshub.app/telegram/channel/TEAMAKIRU
-            // 2. Parse the latest post number
-            // 3. Update latestPostNumber if new post found
-            // 4. Reload the widget
-            
-            console.log('Checking for new posts... (This would require backend implementation)');
-        }
-        
-        // Check for new posts every 10 minutes
-        setInterval(checkForNewPost, 600000);
         
         // Add keyboard shortcut (R to refresh)
         document.addEventListener('keydown', (e) => {
@@ -333,6 +324,40 @@
                 loadLatestPost();
             }
         });
+        
+        // Resize iframe for mobile
+        function adjustIframeHeight() {
+            const iframe = document.getElementById('telegramIframe');
+            if (window.innerWidth <= 480) {
+                iframe.style.height = '400px';
+            } else {
+                iframe.style.height = '500px';
+            }
+        }
+        
+        window.addEventListener('load', adjustIframeHeight);
+        window.addEventListener('resize', adjustIframeHeight);
+        
+        // Optional: Try to extract post content for better styling
+        function extractPostInfo() {
+            // This would require more complex handling with Telegram's API
+            // For now, we rely on the iframe method
+            console.log('Using iframe method for full Telegram rendering including premium emojis');
+        }
+        
+        // Alternative method using Telegram's API (for future implementation)
+        async function getPostViaAPI() {
+            /* 
+            // This would require backend implementation
+            try {
+                const response = await fetch(`https://api.telegram.org/botYOUR_BOT_TOKEN/getChat?chat_id=@TEAMAKIRU`);
+                const data = await response.json();
+                console.log('API data:', data);
+            } catch (error) {
+                console.log('API error:', error);
+            }
+            */
+        }
     </script>
 
 </body>
